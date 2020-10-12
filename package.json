@@ -1,0 +1,26 @@
+{
+  "name": "strapio",
+  "version": "0.0.1",
+  "description": "Socket IO Module for Strapi",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/larsonnn/strapio.git"
+  },
+  "keywords": [
+    "strapi",
+    "socket.io",
+    "socketio",
+    "websocket",
+    "websockets"
+  ],
+  "author": "Lars Feldeisen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/larsonnn/strapio/issues"
+  },
+  "homepage": "https://github.com/larsonnn/strapio#readme"
+}
