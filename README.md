@@ -2,7 +2,7 @@
 
 module for working with socket.io with predefined rules. StrapIO will look at Role permission on each action.
 
-### Installation
+## Installation
 ```bash
 npm i strapio
 ```
@@ -14,8 +14,9 @@ strapi.StrapIO = new (require('strapio'))(strapi);
   });
 ```
 
-### Usage
+## Usage
 
+### server
 `api/<content-type>/controllers/<content-type.js`
 ```js
 module.exports = {
@@ -48,6 +49,23 @@ module.exports = {
 
     return sanitizeEntity(entity, { model: strapi.models.CONTENTTYPE });
   },
+```
+### Client
+
+```js
+const io = require('socket.io-client');
+
+// Handshake required, token will be verified against strapi
+const socket = io.connect(API_URL, {
+    query: { token }
+});
+
+socket.on('create', data => {
+    //do something
+});
+socket.on('update', data => {
+    // do something
+});
 ```
 
 ### Test
