@@ -48,7 +48,8 @@ module.exports = {
     strapi.StrapIO.emit(this, ctx,'update', entity, 'contenttype');
 
     return sanitizeEntity(entity, { model: strapi.models.CONTENTTYPE });
-  },
+  }
+}
 ```
 ### Client
 
