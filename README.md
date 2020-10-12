@@ -79,7 +79,7 @@ Currently tested with:
 
 ## Middleware ...coming
 
-Currently im working on an middleware wrapper for StrapIO. Im not currently sure how. :)
+Im working on an middleware wrapper. Im not sure how. :)
 
 ## Contribute
 just do it over github or chat with me [@Discord](https://discord.gg/8gCdxzs)
