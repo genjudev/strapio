@@ -45,7 +45,7 @@ module.exports = {
     } else {
       entity = await strapi.services.CONTENTTYPE.update({ id }, ctx.request.body);
     }
-    strapi.StrapIO.emit(this, ctx,'update', entity, 'transport');
+    strapi.StrapIO.emit(this, ctx,'update', entity, 'contenttype');
 
     return sanitizeEntity(entity, { model: strapi.models.CONTENTTYPE });
   },
