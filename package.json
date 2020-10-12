@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/larsonnn/strapio/issues"
   },
-  "homepage": "https://github.com/larsonnn/strapio#readme"
+  "homepage": "https://github.com/larsonnn/strapio#readme",
+  "dependencies": {
+    "socket.io": "^2.3.0"
+  }
 }
