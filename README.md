@@ -68,7 +68,7 @@ socket.on('update', data => {
 });
 ```
 
-### Test
+## Test
 Currently tested with:
 ```js
 {
@@ -77,9 +77,13 @@ Currently tested with:
 }
 ```
 
-### Middleware ...coming
+## Middleware ...coming
 
 Currently im working on an middleware wrapper for StrapIO. Im not currently sure how. :)
 
-### Contribute
+## Contribute
 just do it over github or chat with me [@Discord](https://discord.gg/8gCdxzs)
+
+## TODO
+1. validation
+2. Error handling
