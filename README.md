@@ -10,8 +10,8 @@ npm i strapio
 `config/functions/bootstrap.js`
 ```js
 process.nextTick(() => {
-strapi.StrapIO = new (require('strapio'))(strapi);
-  });
+    strapi.StrapIO = new (require('strapio'))(strapi);
+});
 ```
 
 ## Usage
