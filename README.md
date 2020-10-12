@@ -28,7 +28,7 @@ module.exports = {
     } else {
       entity = await strapi.services.CONTENTTYPE.create(ctx.request.body);
     }
-    strapi.StrapIO.emit(this, ctx,'create', entity, 'transport');
+    strapi.StrapIO.emit(this, ctx,'create', entity, 'contenttype');
 
     return sanitizeEntity(entity, { model: strapi.models.CONTENTTYPE });
   }
