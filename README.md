@@ -33,7 +33,7 @@ module.exports = {
     } else {
       entity = await strapi.services.CONTENTTYPE.create(ctx.request.body);
     }
-    strapi.StrapIO.emit(this,'create', entity, 'contenttype');
+    strapi.StrapIO.emit(this,'create', entity);
 
     return sanitizeEntity(entity, { model: strapi.models.CONTENTTYPE });
   }
@@ -51,7 +51,7 @@ module.exports = {
       entity = await strapi.services.CONTENTTYPE.update({ id }, ctx.request.body);
     }
 
-    strapi.StrapIO.emit(this,'update', entity, 'contenttype');
+    strapi.StrapIO.emit(this,'update', entity);
 
     return sanitizeEntity(entity, { model: strapi.models.CONTENTTYPE });
   }
