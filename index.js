@@ -23,7 +23,6 @@ class StrapIO {
     const roles = await this._upServices().userspermissions.getRoles();
 
     for (var i in roles) {
-      console.log(roles[i]);
       const roleDetail = await this._upServices().userspermissions.getRole(
         roles[i].id,
         plugins
