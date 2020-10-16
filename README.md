@@ -1,23 +1,28 @@
 ## StrapIO
 
 module for working with socket.io with predefined rules. StrapIO will look at Role permission on each action.
+StrapIO is looking for all roles which have access to the given contenttype and action type.
 
 ## Installation
+
 ```bash
 npm i strapio
 ```
 
 `config/functions/bootstrap.js`
+
 ```js
 process.nextTick(() => {
-    strapi.StrapIO = new (require('strapio'))(strapi);
+  strapi.StrapIO = new (require("strapio"))(strapi);
 });
 ```
 
 ## Usage
 
 ### server
-`api/<content-type>/controllers/<content-type.js`
+
+`api/<content-type>/controllers/<content-type>.js`
+
 ```js
 module.exports = {
   async create(ctx) {
@@ -28,7 +33,7 @@ module.exports = {
     } else {
       entity = await strapi.services.CONTENTTYPE.create(ctx.request.body);
     }
-    strapi.StrapIO.emit(this, ctx,'create', entity, 'contenttype');
+    strapi.StrapIO.emit(this,'create', entity, 'contenttype');
 
     return sanitizeEntity(entity, { model: strapi.models.CONTENTTYPE });
   }
@@ -45,32 +50,36 @@ module.exports = {
     } else {
       entity = await strapi.services.CONTENTTYPE.update({ id }, ctx.request.body);
     }
-    strapi.StrapIO.emit(this, ctx,'update', entity, 'contenttype');
+
+    strapi.StrapIO.emit(this,'update', entity, 'contenttype');
 
     return sanitizeEntity(entity, { model: strapi.models.CONTENTTYPE });
   }
 }
 ```
+
 ### Client
 
 ```js
-const io = require('socket.io-client');
+const io = require("socket.io-client");
 
 // Handshake required, token will be verified against strapi
 const socket = io.connect(API_URL, {
-    query: { token }
+  query: { token },
 });
 
-socket.on('create', data => {
-    //do something
+socket.on("create", (data) => {
+  //do something
 });
-socket.on('update', data => {
-    // do something
+socket.on("update", (data) => {
+  // do something
 });
 ```
 
 ## Test
+
 Currently tested with:
+
 ```js
 {
     "strapi": "3.1.6",
@@ -83,8 +92,5 @@ Currently tested with:
 Im working on an middleware wrapper. Im not sure how. :)
 
 ## Contribute
-just do it over github or chat with me [@Discord](https://discord.gg/8gCdxzs)
 
-## TODO
-1. validation
-2. Error handling
+just do it over github or chat with me [@Discord](https://discord.gg/8gCdxzs)

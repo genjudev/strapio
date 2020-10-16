@@ -18,7 +18,7 @@ class StrapIO {
     });
   }
 
-  async emit(vm, ctx, action, entity) {
+  async emit(vm, action, entity) {
     const plugins = await this._upServices().userspermissions.getPlugins("en");
     const roles = await this._upServices().userspermissions.getRoles();
 
