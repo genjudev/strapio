@@ -19,6 +19,10 @@ class StrapIO {
   }
 
   async emit(vm, action, entity) {
+    if(arguments.length > 3) {
+      action = arguments[3];
+      entity = arguments[4];
+    }
     const plugins = await this._upServices().userspermissions.getPlugins("en");
     const roles = await this._upServices().userspermissions.getRoles();
 
