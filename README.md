@@ -36,7 +36,7 @@ module.exports = {
     strapi.StrapIO.emit(this,'create', entity);
 
     return sanitizeEntity(entity, { model: strapi.models.CONTENTTYPE });
-  }
+  },
 
   async update(ctx) {
     const { id } = ctx.params;
