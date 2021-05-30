@@ -45,7 +45,7 @@ class StrapIO {
       ) {
         this.io.sockets
           .in(roleDetail.name)
-          .emit(action, sendDataBuilder(vm.identity, entity));
+          .emit(action, this.sendDataBuilder(vm.identity, entity));
       }
     }
   }
