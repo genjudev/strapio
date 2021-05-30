@@ -18,10 +18,15 @@ class StrapIO {
     });
   }
 
-  async emit(vm, action, entity) {
+  sendDataBuilder(identity, entity) {
+    return Array.isArray(entity)
+      ? JSON.stringify({ identity: identity.toLowerCase(), entity })
+      : JSON.stringify({ identity: identity.toLowerCase(), ...entity });
+  }
 
+  async emit(vm, action, entity) {
     // check if old arguments are used. < 1.0.10
-    if(arguments.length > 4) {
+    if (arguments.length > 4) {
       action = arguments[2];
       entity = arguments[3];
     }
@@ -40,10 +45,7 @@ class StrapIO {
       ) {
         this.io.sockets
           .in(roleDetail.name)
-          .emit(
-            action,
-            JSON.stringify({ identity: vm.identity.toLowerCase(), ...entity })
-          );
+          .emit(action, sendDataBuilder(vm.identity, entity));
       }
     }
   }
