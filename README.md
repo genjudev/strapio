@@ -82,14 +82,14 @@ Currently tested with:
 
 ```js
 {
-    "strapi": "3.1.6",
-    "strapi-plugin-users-permissions": "3.1.6"
+    "strapi": "3.6.3",
+    "strapi-plugin-users-permissions": "3.6.3"
 }
 ```
 
-## Middleware ...coming
+## Plugin for strapi 
 
-Im working on an middleware wrapper. Im not sure how. :)
+You can install strapio with a plugin `npm i strapi-plugin-socket-io`.
 
 ## Contribute
 
