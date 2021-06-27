@@ -3,6 +3,9 @@
 module for working with socket.io with predefined rules. StrapIO will look at Role permission on each action.
 StrapIO is looking for all roles which have access to the given contenttype and action type.
 
+UPDATE v2:
+You need to subscribe first before you receive any data. `socket.on('subscribe', 'content-type/ex: article')`
+
 ## Installation
 
 ```bash
@@ -68,7 +71,10 @@ const socket = io.connect(API_URL, {
   query: { token },
 });
 
-socket.on("create", (data) => {
+socket.emit('subscribe', 'article'); // article is the room which the client joins
+
+socket.on("find", (data) => {
+        console.log("article:", data);
   //do something
 });
 socket.on("update", (data) => {

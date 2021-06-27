@@ -5,10 +5,18 @@ class StrapIO {
 
     this.io.use((socket, next) => {
       if (socket.handshake.query && socket.handshake.query.token) {
+
         this._upServices()
           .jwt.verify(socket.handshake.query.token)
           .then((user) => {
             socket.emit("message", "Hey");
+
+            socket.on('subscribe', payload => {
+              if(payload !== undefined && payload !== '') {
+                socket.join(payload.toLowerCase());
+              }
+            });
+
             this._upServices()
               .user.fetchAuthenticatedUser(user.id)
               .then((detail) => socket.join(detail.role.name));
@@ -44,7 +52,7 @@ class StrapIO {
         ][action].enabled
       ) {
         this.io.sockets
-          .in(roleDetail.name)
+          .in(vm.identity.toLowerCase())
           .emit(action, this.sendDataBuilder(vm.identity, entity));
       }
     }
