@@ -4,7 +4,7 @@ module for working with socket.io with predefined rules. StrapIO will look at Ro
 StrapIO is looking for all roles which have access to the given contenttype and action type.
 
 UPDATE v2:
-You need to subscribe first before you receive any data. `socket.emit('subscribe', 'content-type/ex: article')`
+You need to subscribe first before you receive any data. `socket.emit('subscribe', 'article')` article is the content-type.
 
 ## Installation
 
