@@ -51,6 +51,11 @@ class StrapIO {
           vm.identity.toLowerCase()
         ][action].enabled
       ) {
+        if(entity._id || entity.id) {
+          this.io.sockets
+          .in(`${vm.identity.toLowerCase()}_${entity._id || entity.id}`)
+          .emit(action, this.sendDataBuilder(vm.identity, entity))
+        }
         this.io.sockets
           .in(vm.identity.toLowerCase())
           .emit(action, this.sendDataBuilder(vm.identity, entity));
