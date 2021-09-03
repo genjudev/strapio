@@ -10,6 +10,7 @@ class StrapIO {
           .jwt.verify(socket.handshake.query.token)
           .then((user) => {
             socket.emit("message", "Hey");
+            console.log("LOL")
 
             socket.on('subscribe', payload => {
               if(payload !== undefined && payload !== '') {
@@ -33,11 +34,7 @@ class StrapIO {
   }
 
   async emit(vm, action, entity) {
-    // check if old arguments are used. < 1.0.10
-    if (arguments.length > 4) {
-      action = arguments[2];
-      entity = arguments[3];
-    }
+
     const plugins = await this._upServices().userspermissions.getPlugins("en");
     const roles = await this._upServices().userspermissions.getRoles();
 
@@ -63,6 +60,10 @@ class StrapIO {
     }
   }
 
+  async emitRaw(room, event, data) {
+    this.io.sockets.in(room).emit(event, data)
+  }
+ 
   _upServices() {
     return this.strapi.plugins["users-permissions"].services;
   }
