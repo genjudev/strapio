@@ -38,6 +38,9 @@ module.exports = {
     }
     strapi.StrapIO.emit(this,'create', entity);
 
+    // or send custom event 
+    strapi.StrapIO.emitRaw('myroom', 'myevent', entity);
+
     return sanitizeEntity(entity, { model: strapi.models.CONTENTTYPE });
   },
 
