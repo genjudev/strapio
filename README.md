@@ -20,6 +20,17 @@ process.nextTick(() => {
 });
 ```
 
+### Configuration socket.io
+
+```js
+process.nextTick(() => {
+  strapi.StrapIO = new (require("strapio"))(strapi, {
+    path: "/other/path/",
+    cors: { origin: "*", methods: ["GET", "POST"] },
+  });
+});
+```
+
 ## Usage
 
 ### server
@@ -36,10 +47,10 @@ module.exports = {
     } else {
       entity = await strapi.services.CONTENTTYPE.create(ctx.request.body);
     }
-    strapi.StrapIO.emit(this,'create', entity);
+    strapi.StrapIO.emit(this, "create", entity);
 
-    // or send custom event 
-    strapi.StrapIO.emitRaw('myroom', 'myevent', entity);
+    // or send custom event
+    strapi.StrapIO.emitRaw("myroom", "myevent", entity);
 
     return sanitizeEntity(entity, { model: strapi.models.CONTENTTYPE });
   },
@@ -54,14 +65,17 @@ module.exports = {
         files,
       });
     } else {
-      entity = await strapi.services.CONTENTTYPE.update({ id }, ctx.request.body);
+      entity = await strapi.services.CONTENTTYPE.update(
+        { id },
+        ctx.request.body
+      );
     }
 
-    strapi.StrapIO.emit(this,'update', entity);
+    strapi.StrapIO.emit(this, "update", entity);
 
     return sanitizeEntity(entity, { model: strapi.models.CONTENTTYPE });
-  }
-}
+  },
+};
 ```
 
 ### Client
@@ -74,15 +88,44 @@ const socket = io.connect(API_URL, {
   query: { token },
 });
 
-socket.emit('subscribe', 'article'); // article is the room which the client joins
+socket.emit("subscribe", "article"); // article is the room which the client joins
 
 socket.on("find", (data) => {
-        console.log("article:", data);
+  console.log("article:", data);
   //do something
 });
 socket.on("update", (data) => {
   // do something
 });
+```
+
+### Client, Web
+
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+<script>
+  // Handshake required, token will be verified against strapi
+  (function () {
+    const socket = io("http://localhost:1337/", {
+      path: "/sockettest/",
+      query: {
+        token,
+      },
+    });
+
+    socket.emit("subscribe", "article"); // article is the room which the client joins
+    socket.emit("subscribe", "myroom"); // custom room
+
+    socket.on("find", (data) => {
+      //do something
+    });
+    socket.on("update", (data) => {
+      // do something
+    });
+
+    socket.on("myevent", (data) => {});
+  })();
+</script>
 ```
 
 ## Test
@@ -96,7 +139,7 @@ Currently tested with:
 }
 ```
 
-## Plugin for strapi 
+## Plugin for strapi
 
 You can install strapio with a plugin `npm i strapi-plugin-socket-io`.
 
