@@ -1,72 +1,81 @@
-class StrapIO {
-  constructor(strapi) {
-    this.strapi = strapi;
-    this.io = require("socket.io")(this.strapi.server);
+/*  Helper Functions  */
 
-    this.io.use((socket, next) => {
-      if (socket.handshake.query && socket.handshake.query.token) {
+const sendDataBuilder = (identity, entity) => {
+  return Array.isArray(entity)
+    ? JSON.stringify({ identity: identity.toLowerCase(), entity })
+    : JSON.stringify({ identity: identity.toLowerCase(), ...entity });
+};
 
-        this._upServices()
-          .jwt.verify(socket.handshake.query.token)
-          .then((user) => {
-            socket.emit("message", "Hey");
-            console.log("LOL")
+const getUpServices = (strapi) => strapi.plugins["users-permissions"].services;
 
-            socket.on('subscribe', payload => {
-              if(payload !== undefined && payload !== '') {
-                socket.join(payload.toLowerCase());
-              }
-            });
+/* socket.io middleware */
 
-            this._upServices()
-              .user.fetchAuthenticatedUser(user.id)
-              .then((detail) => socket.join(detail.role.name));
-          });
-      }
-      next();
+const subscribe = (socket, next) => {
+  socket.on("subscribe", (payload) => {
+    if (payload !== undefined && payload !== "") {
+      socket.join(payload.toLowerCase());
+    }
+  });
+  next();
+};
+
+const handshake = (socket, next) => {
+  if (socket.handshake.query && socket.handshake.query.token) {
+    const upsServices = getUpServices(strapi);
+    upsServices.jwt.verify(socket.handshake.query.token).then((user) => {
+      socket.emit("message", "handshake ok");
+
+      upsServices.user
+        .fetchAuthenticatedUser(user.id)
+        .then((detail) => socket.join(detail.role.name));
     });
   }
+  next();
+};
 
-  sendDataBuilder(identity, entity) {
-    return Array.isArray(entity)
-      ? JSON.stringify({ identity: identity.toLowerCase(), entity })
-      : JSON.stringify({ identity: identity.toLowerCase(), ...entity });
-  }
+/* socket.io actions */
 
-  async emit(vm, action, entity) {
+const emit = (upsServices, io) => {
+  return async (vm, action, entity) => {
+    const plugins = await upsServices.userspermissions.getPlugins("en");
+    const roles = await upsServices.userspermissions.getRoles();
 
-    const plugins = await this._upServices().userspermissions.getPlugins("en");
-    const roles = await this._upServices().userspermissions.getRoles();
-
-    for (var i in roles) {
-      const roleDetail = await this._upServices().userspermissions.getRole(
+    for (let i in roles) {
+      const roleDetail = await upsServices.userspermissions.getRole(
         roles[i].id,
         plugins
       );
+
       if (
-        roleDetail.permissions.application.controllers[
+        !roleDetail.permissions.application.controllers[
           vm.identity.toLowerCase()
         ][action].enabled
-      ) {
-        if(entity._id || entity.id) {
-          this.io.sockets
-          .in(`${vm.identity.toLowerCase()}_${entity._id || entity.id}`)
-          .emit(action, this.sendDataBuilder(vm.identity, entity))
-        }
-        this.io.sockets
-          .in(vm.identity.toLowerCase())
-          .emit(action, this.sendDataBuilder(vm.identity, entity));
-      }
-    }
-  }
+      )
+        return;
 
-  async emitRaw(room, event, data) {
-    this.io.sockets.in(room).emit(event, data)
-  }
- 
-  _upServices() {
-    return this.strapi.plugins["users-permissions"].services;
-  }
-}
+      if (entity._id || entity.id) {
+        io.sockets
+          .in(`${vm.identity.toLowerCase()}_${entity._id || entity.id}`)
+          .emit(action, sendDataBuilder(vm.identity, entity));
+      }
+      io.sockets
+        .in(vm.identity.toLowerCase())
+        .emit(action, sendDataBuilder(vm.identity, entity));
+    }
+  };
+};
+
+const StrapIO = (strapi, options) => {
+  const io = require("socket.io")(strapi.server, options);
+
+  // loading middleware ordered
+  io.use(handshake);
+  io.use(subscribe);
+
+  return {
+    emit: emit(getUpServices(strapi), io),
+    emitRaw: (room, event, data) => io.sockets.in(room).emit(event, data),
+  };
+};
 
 module.exports = StrapIO;
