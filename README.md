@@ -16,7 +16,7 @@ npm i strapio
 
 ```js
 process.nextTick(() => {
-  strapi.StrapIO = new (require("strapio"))(strapi);
+  strapi.StrapIO = (require("strapio"))(strapi);
 });
 ```
 
@@ -24,7 +24,7 @@ process.nextTick(() => {
 
 ```js
 process.nextTick(() => {
-  strapi.StrapIO = new (require("strapio"))(strapi, {
+  strapi.StrapIO = (require("strapio"))(strapi, {
     path: "/other/path/",
     cors: { origin: "*", methods: ["GET", "POST"] },
   });
