@@ -131,6 +131,11 @@ socket.on("update", (data) => {
 
 - https://github.com/larsonnn/strapio-example-project
 
+## debugging
+
+- `DEBUG=strapio npm run develop`
+- `DEBUG=* npm run develop`
+
 ## Test
 
 Currently tested with:
