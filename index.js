@@ -72,6 +72,16 @@ const StrapIO = (strapi, options) => {
   io.use(handshake);
   io.use(subscribe);
 
+  // general events
+  io.on("connection", (socket) => {
+    console.debug("Connected Socket:", socket.id);
+    socket.on("disconnecting", (reason) => {
+      console.debug("Socket Disconnect:", socket.id, socket.rooms);
+    });
+  });
+
+  io.on("disconnect");
+
   return {
     emit: emit(getUpServices(strapi), io),
     emitRaw: (room, event, data) => io.sockets.in(room).emit(event, data),
