@@ -127,6 +127,9 @@ socket.on("update", (data) => {
   })();
 </script>
 ```
+## Full example project
+
+- https://github.com/larsonnn/strapio-example-project
 
 ## Test
 
