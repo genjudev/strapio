@@ -8,12 +8,20 @@ const sendDataBuilder = (identity, entity) => {
 
 const getUpServices = (strapi) => strapi.plugins["users-permissions"].services;
 
+const sendMessageToSocket = (socket, message) => {
+  socket.emit("message", message);
+};
+
 /* socket.io middleware */
 
 const subscribe = (socket, next) => {
   socket.on("subscribe", (payload) => {
     if (payload !== undefined && payload !== "") {
       socket.join(payload.toLowerCase());
+      sendMessageToSocket(
+        socket,
+        "Successfully joined: " + payload.toLowerCase()
+      );
     }
   });
   next();
@@ -23,7 +31,7 @@ const handshake = (socket, next) => {
   if (socket.handshake.query && socket.handshake.query.token) {
     const upsServices = getUpServices(strapi);
     upsServices.jwt.verify(socket.handshake.query.token).then((user) => {
-      socket.emit("message", "handshake ok");
+      sendMessageToSocket(socket, "handshake ok");
 
       upsServices.user
         .fetchAuthenticatedUser(user.id)
@@ -53,11 +61,14 @@ const emit = (upsServices, io) => {
       )
         return;
 
+      // send to specific subscriber
       if (entity._id || entity.id) {
         io.sockets
           .in(`${vm.identity.toLowerCase()}_${entity._id || entity.id}`)
           .emit(action, sendDataBuilder(vm.identity, entity));
       }
+
+      // send to all in collection room
       io.sockets
         .in(vm.identity.toLowerCase())
         .emit(action, sendDataBuilder(vm.identity, entity));
@@ -72,15 +83,16 @@ const StrapIO = (strapi, options) => {
   io.use(handshake);
   io.use(subscribe);
 
-  // general events
-  io.on("connection", (socket) => {
-    console.debug("Connected Socket:", socket.id);
-    socket.on("disconnecting", (reason) => {
-      console.debug("Socket Disconnect:", socket.id, socket.rooms);
+  // debugging
+  if(process.env.DEBUG == "strapio" || process.env.DEBUG == "*") {
+    io.on("connection", (socket) => {
+      console.debug("Connected Socket:", socket.id);
+      socket.on("disconnecting", (reason) => {
+        console.debug("Socket Disconnect:", socket.id, socket.rooms);
+      });
     });
-  });
-
-  io.on("disconnect");
+  }
+  
 
   return {
     emit: emit(getUpServices(strapi), io),
