@@ -32,11 +32,16 @@ const handshake = (socket, next) => {
     const upsServices = getUpServices(strapi);
     upsServices.jwt.verify(socket.handshake.query.token).then((user) => {
       sendMessageToSocket(socket, "handshake ok");
-
       upsServices.user
         .fetchAuthenticatedUser(user.id)
         .then((detail) => socket.join(detail.role.name));
+    }).catch((err) => {
+      sendMessageToSocket(socket, err.message);
+      socket.disconnect()
     });
+  } else {
+    sendMessageToSocket(socket, "No token given.");
+    socket.disconnect();
   }
   next();
 };
