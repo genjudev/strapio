@@ -24,6 +24,8 @@
   },
   "homepage": "https://github.com/larsonnn/strapio#readme",
   "dependencies": {
+    "@socket.io/postgres-adapter": "^0.2.0",
+    "pg": "^8.5.1",
     "socket.io": "^4.1.2"
   }
 }
