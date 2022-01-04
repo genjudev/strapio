@@ -1,6 +1,6 @@
 {
   "name": "strapio",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Socket IO Module for Strapi",
   "main": "index.js",
   "scripts": {
