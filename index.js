@@ -82,11 +82,30 @@ const emit = (upsServices, io) => {
 };
 
 const StrapIO = (strapi, options) => {
+  const { Pool } = require("pg");
+  const { createAdapter } = require("@socket.io/postgres-adapter");
   const io = require("socket.io")(strapi.server, options);
+
+  const pool = new Pool({
+    user: strapi.config.database.connections.default.settings.username,
+    host: strapi.config.database.connections.default.settings.host,
+    database: strapi.config.database.connections.default.settings.database,
+    password: strapi.config.database.connections.default.settings.password,
+    port: strapi.config.database.connections.default.settings.port,
+  });
+
+  pool.query(`
+    CREATE TABLE IF NOT EXISTS socket_io_attachments (
+      id          bigserial UNIQUE,
+      created_at  timestamptz DEFAULT NOW(),
+      payload     bytea
+    );
+  `);
 
   // loading middleware ordered
   io.use(handshake);
   io.use(subscribe);
+  io.adapter(createAdapter(pool));
 
   // debugging
   if(process.env.DEBUG == "strapio" || process.env.DEBUG == "*") {
