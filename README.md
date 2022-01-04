@@ -6,6 +6,11 @@ StrapIO is looking for all roles which have access to the given contenttype and 
 UPDATE v2:
 You need to subscribe first before you receive any data. `socket.emit('subscribe', 'article')` article is the content-type.
 
+
+## using Strapi v3?
+
+you need to install strapio v2. Version 3 will not work with strapi below 4.
+
 ## Installation
 
 ```bash
@@ -138,14 +143,7 @@ socket.on("update", (data) => {
 
 ## Test
 
-Currently tested with:
-
-```js
-{
-    "strapi": "3.6.3",
-    "strapi-plugin-users-permissions": "3.6.3"
-}
-```
+Currently tested with `strapi v4`
 
 ## Plugin for strapi
 
