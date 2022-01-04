@@ -82,7 +82,7 @@ const emit = (upsServices, io) => {
 };
 
 const StrapIO = (strapi, options) => {
-  const io = require("socket.io")(strapi.server, options);
+  const io = require("socket.io")(strapi.server.httpServer, options);
 
   // loading middleware ordered
   io.use(handshake);
