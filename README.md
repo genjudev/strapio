@@ -17,23 +17,28 @@ you need to install strapio v2. Version 3 will not work with strapi below 4.
 npm i strapio
 ```
 
-`config/functions/bootstrap.js`
+`src/index.js`
 
 ```js
-process.nextTick(() => {
-  strapi.StrapIO = (require("strapio"))(strapi);
-});
+bootstrap({strapi}) {
+        process.nextTick(() => {
+            strapi.StrapIO = (require("strapio"))(strapi);
+        });
+ },
 ```
 
 ### Configuration socket.io
 
 ```js
-process.nextTick(() => {
-  strapi.StrapIO = (require("strapio"))(strapi, {
-    path: "/other/path/",
-    cors: { origin: "*", methods: ["GET", "POST"] },
-  });
-});
+bootstrap({strapi}) {
+        process.nextTick(() => {
+            strapi.StrapIO = (require("strapio"))(strapi, {
+              path: "/other/path/",
+              cors: { origin: "*", methods: ["GET", "POST"] },
+            });
+        });
+ },
+
 ```
 
 ## Usage
